@@ -1,0 +1,154 @@
+<html>
+<head>
+    <title>Skill Bridge - Career Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+        a {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SKILL BRIDGE</h1>
+
+    <label>Select Target Role:</label>
+    <select id="roleSelect"></select>
+
+    <label>Enter Your Current Skills (comma separated and first letter should be Capital):</label>
+    <input type="text" id="skillsInput" placeholder="Example: Python, Excel">
+
+    <button onclick="generateRoadmap()">Generate Roadmap</button>
+
+    <div id="output" class="result"></div>
+</div>
+
+<script>
+
+    // Industry Data
+    const industryData = {
+        "Data Analyst": ["Python", "SQL", "Excel", "Tableau", "Statistics"],
+        "Web Developer": ["HTML/CSS", "JavaScript", "React", "Git", "APIs"],
+        "Marketing Manager": ["SEO", "Content Writing", "Google Ads", "Communication", "Analytics"],
+        "Frontend Developer": ["HTML", "CSS", "Java Script", "Git"],
+        "Backend Developer": ["Java", "SQL", "Node"],
+        "AI Engineer": ["Mathematics", "Python", "Machine Learning", "Model Deployment"]
+    };
+
+    // Course Links
+    const courseLinks = {
+        "Python": "https://www.coursera.org/learn/python",
+        "SQL": "https://www.udemy.com/course/sql-bootcamp",
+        "Tableau": "https://www.tableau.com/learn/training",
+        "React": "https://reactjs.org/tutorial/tutorial.html",
+        "Model Deployment": "https://www.udemy.com/topic/ml-model-deployment",
+        "Machine Learning": "https://www.geeksforgeeks.org/machine-learning",
+        "Git": "https://learningitbranching.js.org",
+        "Excel": "https://www.mygreatlearning.com/academy/learn-for-free/courses/excel-for-beginners",
+        "Statistics": "https://www.edx.org/learn/statistics",
+        "HTML": "https://www.codecademy.com/learn/learn-html"
+    };
+
+    // Populate Roles Dropdown
+    const roleSelect = document.getElementById("roleSelect");
+    Object.keys(industryData).forEach(role => {
+        const option = document.createElement("option");
+        option.value = role;
+        option.text = role;
+        roleSelect.appendChild(option);
+    });
+
+    function generateRoadmap() {
+
+        const selectedRole = roleSelect.value;
+        const requiredSkills = industryData[selectedRole];
+
+        const input = document.getElementById("skillsInput").value;
+        const currentSkills = input.split(",")
+                                   .map(skill => skill.trim())
+                                   .filter(skill => skill.length > 0);
+
+        const missingSkills = requiredSkills.filter(skill => !currentSkills.includes(skill));
+
+        const totalRequired = requiredSkills.length;
+        const possessed = totalRequired - missingSkills.length;
+        const fitPercentage = ((possessed / totalRequired) * 100).toFixed(2);
+
+        let resultHTML = `<h3>Role: ${selectedRole}</h3>`;
+        resultHTML += `<p><strong>Fit Score:</strong> ${fitPercentage}%</p>`;
+        resultHTML += `<p><strong>Skills Possessed:</strong> ${possessed} / ${totalRequired}</p>`;
+
+        if (missingSkills.length === 0) {
+            resultHTML += `<p class="success">✅ SUCCESS: You have all required skills!</p>`;
+        } else {
+            resultHTML += `<p class="warning">⚠️ You need to learn:</p>`;
+
+            missingSkills.forEach((skill, index) => {
+                resultHTML += `<p><strong>Step ${index + 1}:</strong> ${skill}<br>`;
+                
+                if (courseLinks[skill]) {
+                    resultHTML += `Recommended: <a href="${courseLinks[skill]}" target="_blank">${courseLinks[skill]}</a></p>`;
+                } else {
+                    resultHTML += `Recommended: Search certified courses online.</p>`;
+                }
+            });
+        }
+
+        document.getElementById("output").innerHTML = resultHTML;
+    }
+
+</script>
+
+</body>
+</html>
+
+    }
+}
